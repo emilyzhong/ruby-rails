@@ -23,7 +23,12 @@ def monte_carlo(num_samples = 1000)
     # Then, increment hits by the number of times (x, y) is within the circle
     # x^2 + y^2 = 1
     # *********** YOUR CODE BEGINS HERE *********** #
-
+      x = rng.rand(-1.0..1.0)
+      y = rng.rand(-1.0..1.0)
+      
+      if x**2 + y**2 <= 1
+          hits += 1
+      end
     # *********** YOUR CODE ENDS HERE *********** #
   end
 
@@ -48,7 +53,9 @@ def roboticize(string)
   # This should get you familiar with strings, iterators, and blocks
 
   # *********** YOUR CODE HERE *********** #
-  nil
+    words = string.split
+    words.map! {|word| word.capitalize + "."}
+    words.join(" ")
 end
 
 
@@ -100,7 +107,7 @@ def scrabble(word)
     z: 10,
   }
   # *********** YOUR CODE HERE *********** #
-  nil
+  word.chars.map! { |letter| values[letter.to_sym] }.sum
 end
 
 
@@ -119,7 +126,16 @@ def rhyming()
   words.select! { |word| word.length > 5 }
 
   # *********** YOUR CODE HERE *********** #
-  nil
+  rhymes = {arange: [], erange: [], irange: [], orange: [], urange: []}
+  words.each do |word|
+      if word[-5..-1] == "range"
+          suffix_array = rhymes[word[-6..-1].to_sym]
+          if suffix_array
+              suffix_array << word
+          end
+      end
+  end
+  return rhymes
 end
 
 
@@ -164,7 +180,21 @@ class Currency
     # objects are represented in CENTS. See Dollar for more detail.
     yen_in_dollar = 113.32
     # *********** 3. YOUR CODE BEGINS HERE *********** #
-    nil
+    self_dollar_value = 
+        if self.is_a? Yen
+            self.value / yen_in_dollar 
+        else
+            self.value / 100
+        end
+
+    other_dollar_value =
+        if other.is_a? Yen
+            other.value / yen_in_dollar 
+        else
+            other.value / 100
+        end
+
+    self_dollar_value <=> other_dollar_value
     # *********** 3. YOUR CODE ENDS HERE *********** #
   end
 
@@ -201,6 +231,9 @@ class Yen < Currency
   # Feel free to implement more methods in this class later for your own convenience.
   # *********** 1. YOUR CODE BEGINS HERE *********** #
 
+  def to_s
+      "Yen: ¥#{value}"
+  end
   # *********** 1. YOUR CODE ENDS HERE *********** #
 end
 
@@ -217,7 +250,7 @@ class String
       $1 ? Dollar.new(value) : Dollar.new(value * 100)
     elsif self =~ /^¥[\d,]+$/  # Matches yen money format (no decimal)
       # *********** 2. YOUR CODE BEGINS HERE *********** #
-      nil
+      Yen.new(value)
       # *********** 2. YOUR CODE ENDS HERE *********** #
     else
       raise TypeError.new("Cannot convert #{self} to currency.")
